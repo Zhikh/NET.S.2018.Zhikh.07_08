@@ -13,6 +13,12 @@ namespace Logic.Task2
             base.Revenue = revenue;
         }
 
+        /// <summary>
+        /// Creates string for customer based on getting format
+        /// </summary>
+        /// <param name="format"> Format string </param>
+        /// <param name="formatProvider"> Object that provides formatting services for the specified type </param>
+        /// <returns> Formated string </returns>
         public new string ToString(string format, IFormatProvider formatProvider)
         {
             if (formatProvider != null)

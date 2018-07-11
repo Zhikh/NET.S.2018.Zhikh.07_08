@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
+using System.Threading;
 
 namespace Logic.Task1
 {
@@ -12,6 +13,12 @@ namespace Logic.Task1
 
         public decimal Revenue { get; set; }
 
+        /// <summary>
+        /// Creates string for customer based on getting format
+        /// </summary>
+        /// <param name="format"> Format string </param>
+        /// <param name="formatProvider"> Object that provides formatting services for the specified type </param>
+        /// <returns> Formated string </returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
             if (formatProvider != null)
@@ -43,7 +50,7 @@ namespace Logic.Task1
                         else
                         {
                             stringBuilder.Append(Revenue.ToString(format[i].ToString(),
-                                CultureInfo.InvariantCulture));
+                                Thread.CurrentThread.CurrentCulture));
                         }
                         break;
                 }
