@@ -36,6 +36,9 @@ namespace Logic.Task1
                     case 'B':
                         stringBuilder.Append(ContactPhone);
                         break;
+                    case ',':
+                        stringBuilder.Append(",");
+                        break;
                     default:
                         stringBuilder.Append(Revenue.ToString(format[i].ToString(), 
                             CultureInfo.InvariantCulture));
