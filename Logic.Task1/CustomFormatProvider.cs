@@ -9,15 +9,13 @@ namespace Logic.Task1
         {
             if (arg == null)
             {
-                throw new ArgumentException();
+                throw new ArgumentException("Argument can't be null!");
             }
-
-            string result;
 
             IFormattable formattable = arg as IFormattable;
             if (formattable == null)
             {
-                return result = arg.ToString();
+                return arg.ToString();
             }
 
             return formattable.ToString(format, formatProvider);

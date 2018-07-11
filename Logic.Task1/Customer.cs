@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Logic.Task1
 {
-    public sealed class Customer : IFormattable
+    public class Customer : IFormattable
     {
         public string Name { get; set; }
 
@@ -16,33 +16,34 @@ namespace Logic.Task1
         {
             if (formatProvider != null)
             {
-                ICustomFormatter formatter =
-                    formatProvider.GetFormat(this.GetType())
-                            as ICustomFormatter;
+                var formatter =  formatProvider.GetFormat(this.GetType())
+                    as ICustomFormatter;
                 if (formatter != null)
                 {
                     return formatter.Format(format, this, formatProvider);
                 }
             }
 
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < format.Length; i++)
+            int n = format.Length;
+            var stringBuilder = new StringBuilder();
+            for (int i = 0; i < n; i++)
             {
                 switch (format[i])
                 {
                     case 'A':
-                        sb.Append(Name);
+                        stringBuilder.Append(Name);
                         break;
                     case 'B':
-                        sb.Append(ContactPhone);
+                        stringBuilder.Append(ContactPhone);
                         break;
                     default:
-                        sb.Append(Revenue.ToString(format[i].ToString(), CultureInfo.InvariantCulture));
+                        stringBuilder.Append(Revenue.ToString(format[i].ToString(), 
+                            CultureInfo.InvariantCulture));
                         break;
                 }
             }
 
-            return sb.ToString();
+            return stringBuilder.ToString();
         }
     }
 }
