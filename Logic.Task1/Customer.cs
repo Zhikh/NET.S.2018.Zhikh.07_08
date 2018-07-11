@@ -26,6 +26,7 @@ namespace Logic.Task1
             var stringBuilder = new StringBuilder();
             for (int i = 0; i < n; i++)
             {
+                
                 switch (format[i])
                 {
                     case 'A':
@@ -34,12 +35,16 @@ namespace Logic.Task1
                     case 'B':
                         stringBuilder.Append(ContactPhone);
                         break;
-                    case ',':
-                        stringBuilder.Append(",");
-                        break;
                     default:
-                        stringBuilder.Append(Revenue.ToString(format[i].ToString(), 
-                            CultureInfo.InvariantCulture));
+                        if (char.IsPunctuation(format[i]))
+                        {
+                            stringBuilder.Append(format[i]);
+                        }
+                        else
+                        {
+                            stringBuilder.Append(Revenue.ToString(format[i].ToString(),
+                                CultureInfo.InvariantCulture));
+                        }
                         break;
                 }
             }
