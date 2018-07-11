@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
+using System.Threading;
 using NUnit.Framework;
 
 namespace Logic.Task1.Tests
@@ -25,6 +27,36 @@ namespace Logic.Task1.Tests
             sb.AppendFormat(new CustomFormatProvider(), format, customer);
 
             return sb.ToString();
+        }
+
+        [TestCase("{0: P}", "en-US")]
+        [TestCase("{0: C}", "en-US")]
+        [TestCase("{0: G}", "en-US")]
+        [TestCase("{0: P}", "ru-ru")]
+        [TestCase("{0: C}", "ru-ru")]
+        [TestCase("{0: G}", "ru-ru")]
+        [TestCase("{0: P}", "sv-FI")]
+        [TestCase("{0: C}", "sv-FI")]
+        [TestCase("{0: G}", "sv-FI")]
+        [TestCase("{0: P}", "tr-TR")]
+        [TestCase("{0: C}", "tr-TR")]
+        [TestCase("{0: G}", "tr-TR")]
+        [TestCase("{0: P}", "de-DE")]
+        [TestCase("{0: C}", "de-DE")]
+        [TestCase("{0: G}", "de-DE")]
+        public void ToString_CultureDependentValue_FormatString(string format, string culture)
+        {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
+            decimal revenue = 10.30M;
+
+            string expected = revenue.ToString(format, Thread.CurrentThread.CurrentCulture);
+
+            var customer = new Customer { Revenue = revenue };
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat(new CustomFormatProvider(), format, customer);
+
+            string actual = sb.ToString();
         }
     }
 }
