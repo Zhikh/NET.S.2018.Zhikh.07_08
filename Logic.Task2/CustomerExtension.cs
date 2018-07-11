@@ -17,9 +17,7 @@ namespace Logic.Task2
         {
             if (formatProvider != null)
             {
-                var formatter = formatProvider.GetFormat(this.GetType())
-                    as ICustomFormatter;
-                if (formatter != null)
+                if (formatProvider.GetFormat(this.GetType()) is ICustomFormatter formatter)
                 {
                     return formatter.Format(format, this, formatProvider);
                 }
