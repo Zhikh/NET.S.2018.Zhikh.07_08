@@ -31,6 +31,12 @@ namespace Logic.Task2
                     case 'K':
                         stringBuilder.Append(base.Name.ToUpper());
                         break;
+                    case 'k':
+                        stringBuilder.Append(base.Name.ToLower());
+                        break;
+                    case 'Z':
+                        stringBuilder.Append("(" + base.ContactPhone + ")");
+                        break;
                     default:
                         stringBuilder.Append(base.ToString(format[i].ToString(), formatProvider));
                         break;
