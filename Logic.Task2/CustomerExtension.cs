@@ -34,7 +34,7 @@ namespace Logic.Task2
                         stringBuilder.Append(base.Name.ToUpper());
                         break;
                     default:
-                        stringBuilder.Append(base.ToString(format, formatProvider));
+                        stringBuilder.Append(base.ToString(format[i].ToString(), formatProvider));
                         break;
                 }
             }
