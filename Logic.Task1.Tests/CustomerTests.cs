@@ -24,9 +24,10 @@ namespace Logic.Task1.Tests
             };
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat(new CustomFormatProvider(), format, customer);
+            sb.AppendFormat(null, format, customer);
 
             return sb.ToString();
+            // return customer.ToString(format);
         }
 
         [TestCase("{0: P}", "en-US")]
@@ -54,7 +55,7 @@ namespace Logic.Task1.Tests
             var customer = new Customer { Revenue = revenue };
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat(new CustomFormatProvider(), format, customer);
+            sb.AppendFormat(null, format, customer);
 
             string actual = sb.ToString();
         }

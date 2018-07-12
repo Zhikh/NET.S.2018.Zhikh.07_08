@@ -9,7 +9,7 @@ using System.Globalization;
 namespace Logic.Task2.Tests
 {
     [TestFixture]
-    public class CustomerExtensionTests
+    public class CustomerFormatProviderTests
     {
         [TestCase("Jeffrey Richter", 1_000_000, "+1 (425) 555 - 0100", "{0:A, N, B}", ExpectedResult = "Jeffrey Richter, 1,000,000.00, +1 (425) 555 - 0100")]
         [TestCase("Jeffrey Richter", 1_000_000, "+1 (425) 555 - 0100", "{0:A}", ExpectedResult = "Jeffrey Richter")]
@@ -22,10 +22,15 @@ namespace Logic.Task2.Tests
         [TestCase("Jeffrey Richter", 1_000_000, "+1 (425) 555 - 0100", "{0:A Z}", ExpectedResult = "Jeffrey Richter (+1 (425) 555 - 0100)")]
         public string ToString_UnformatValues_FormatString(string name, decimal revenue, string number, string format)
         {
-            var customer = new CustomerExtension(name, number, revenue);
+            var customer = new Customer
+            {
+                Name = name,
+                ContactPhone = number,
+                Revenue = revenue
+            };
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat(new CustomFormatProvider(), format, customer);
+            sb.AppendFormat(new CustomerFormatProvider(), format, customer);
 
             return sb.ToString();
         }
@@ -55,7 +60,7 @@ namespace Logic.Task2.Tests
             var customer = new Customer { Revenue = revenue };
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat(new CustomFormatProvider(), format, customer);
+            sb.AppendFormat(new CustomerFormatProvider(), format, customer);
 
             string actual = sb.ToString();
         }

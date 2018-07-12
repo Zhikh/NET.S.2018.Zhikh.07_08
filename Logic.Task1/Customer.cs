@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
-using System.Threading;
 
 namespace Logic.Task1
 {
@@ -13,6 +12,16 @@ namespace Logic.Task1
 
         public decimal Revenue { get; set; }
 
+        public override string ToString()
+        {
+            return this.ToString("G", CultureInfo.CurrentCulture);
+        }
+
+        public string ToString(string format)
+        {
+            return this.ToString(format, CultureInfo.CurrentCulture);
+        }
+
         /// <summary>
         /// Creates string for customer based on getting format
         /// </summary>
@@ -21,6 +30,11 @@ namespace Logic.Task1
         /// <returns> Formated string </returns>
         public virtual string ToString(string format, IFormatProvider formatProvider)
         {
+            if (string.IsNullOrEmpty(format))
+            {
+                format = "G";
+            }
+
             if (formatProvider != null)
             {
                 if (formatProvider.GetFormat(this.GetType()) is ICustomFormatter formatter)
@@ -33,7 +47,6 @@ namespace Logic.Task1
             var stringBuilder = new StringBuilder();
             for (int i = 0; i < n; i++)
             {
-                
                 switch (format[i])
                 {
                     case 'A':
@@ -50,7 +63,7 @@ namespace Logic.Task1
                         else
                         {
                             stringBuilder.Append(Revenue.ToString(format[i].ToString(),
-                                Thread.CurrentThread.CurrentCulture));
+                               CultureInfo.CurrentCulture));
                         }
                         break;
                 }
