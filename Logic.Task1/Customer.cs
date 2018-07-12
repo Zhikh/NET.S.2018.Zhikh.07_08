@@ -19,7 +19,7 @@ namespace Logic.Task1
         /// <param name="format"> Format string </param>
         /// <param name="formatProvider"> Object that provides formatting services for the specified type </param>
         /// <returns> Formated string </returns>
-        public string ToString(string format, IFormatProvider formatProvider)
+        public virtual string ToString(string format, IFormatProvider formatProvider)
         {
             if (formatProvider != null)
             {
