@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
+using System.Threading;
 
 namespace Logic.Task1
 {
-    public class Customer : IFormattable
+    public sealed class Customer : IFormattable
     {
         public string Name { get; set; }
 
@@ -28,7 +29,7 @@ namespace Logic.Task1
         /// <param name="format"> Format string </param>
         /// <param name="formatProvider"> Object that provides formatting services for the specified type </param>
         /// <returns> Formated string </returns>
-        public virtual string ToString(string format, IFormatProvider formatProvider)
+        public string ToString(string format, IFormatProvider formatProvider)
         {
             if (string.IsNullOrEmpty(format))
             {
@@ -47,25 +48,32 @@ namespace Logic.Task1
             var stringBuilder = new StringBuilder();
             for (int i = 0; i < n; i++)
             {
-                switch (format[i])
+                try
                 {
-                    case 'A':
-                        stringBuilder.Append(Name);
-                        break;
-                    case 'B':
-                        stringBuilder.Append(ContactPhone);
-                        break;
-                    default:
-                        if (char.IsPunctuation(format[i]))
-                        {
-                            stringBuilder.Append(format[i]);
-                        }
-                        else
-                        {
-                            stringBuilder.Append(Revenue.ToString(format[i].ToString(),
-                               CultureInfo.CurrentCulture));
-                        }
-                        break;
+                    switch (format[i])
+                    {
+                        case 'A':
+                            stringBuilder.Append(Name);
+                            break;
+                        case 'B':
+                            stringBuilder.Append(ContactPhone);
+                            break;
+                        default:
+                            if (char.IsPunctuation(format[i]))
+                            {
+                                stringBuilder.Append(format[i]);
+                            }
+                            else
+                            {
+                                stringBuilder.Append(Revenue.ToString(format[i].ToString(),
+                                   Thread.CurrentThread.CurrentCulture));
+                            }
+                            break;
+                    }
+                }
+                catch (FormatException ex)
+                {
+                    throw new FormatException(String.Format("The format of '{0}' is invalid.", format[i]), ex);
                 }
             }
 

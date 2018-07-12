@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace Logic.Task1
 {
-    public class AnotherCustomer : IFormattable
+    public sealed class AnotherCustomer : IFormattable
     {
         public string Name { get; set; }
 
@@ -27,7 +27,7 @@ namespace Logic.Task1
         /// <param name="format"> Format string </param>
         /// <param name="formatProvider"> Object that provides formatting services for the specified type </param>
         /// <returns> Formated string </returns>
-        public virtual string ToString(string format, IFormatProvider formatProvider)
+        public string ToString(string format, IFormatProvider formatProvider)
         {
             if (string.IsNullOrEmpty(format))
             {
@@ -41,17 +41,24 @@ namespace Logic.Task1
                     return formatter.Format(format, this, formatProvider);
                 }
             }
-            
-            switch (format.ToUpper())
+
+            try
             {
-                case "NM":
-                    return Name;
-                case "PH":
-                    return ContactPhone;
-                case "NP":
-                    return Name + ", " + ContactPhone;
-                default:
-                    return Revenue.ToString(format, CultureInfo.CurrentCulture);
+                switch (format.ToUpper())
+                {
+                    case "NM":
+                        return Name;
+                    case "PH":
+                        return ContactPhone;
+                    case "NP":
+                        return Name + ", " + ContactPhone;
+                    default:
+                        return Revenue.ToString(format, CultureInfo.CurrentCulture);
+                }
+            }
+            catch (FormatException ex)
+            {
+                throw new FormatException(String.Format("The format of '{0}' is invalid.", format), ex);
             }
         }
     }
