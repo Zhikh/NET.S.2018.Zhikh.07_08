@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Text;
-using System.Threading;
 
 namespace Logic.Task1
 {
@@ -28,7 +26,7 @@ namespace Logic.Task1
         /// </summary>
         /// <param name="format"> Format string </param>
         /// <param name="formatProvider"> Object that provides formatting services for the specified type </param>
-        /// <returns> Formated string </returns>
+        /// <returns> String after formatting </returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
             if (string.IsNullOrEmpty(format))
@@ -38,46 +36,48 @@ namespace Logic.Task1
 
             if (formatProvider != null)
             {
-                if (formatProvider.GetFormat(this.GetType()) is ICustomFormatter formatter)
+                var formatter = formatProvider.GetFormat(typeof(ICustomFormatter))
+                    as ICustomFormatter;
+                if (formatter != null)
                 {
                     return formatter.Format(format, this, formatProvider);
                 }
             }
 
-            int n = format.Length;
-            var stringBuilder = new StringBuilder();
-            for (int i = 0; i < n; i++)
+            switch (format.ToUpper())
             {
-                try
-                {
-                    switch (format[i])
+                case "NM":
+                    return Name;
+                case "PH":
+                    return ContactPhone;
+                case "NP":
+                    return Name + ", " + ContactPhone;
+                case "NPG":
+                    return Name + ", " + ContactPhone + ", " + Revenue.ToString("G", CultureInfo.CurrentCulture);
+                case "NPN":
+                    return Name + ", " + ContactPhone + ", " + Revenue.ToString("N", CultureInfo.CurrentCulture);
+                case "NGP":
+                    return Name + ", " + Revenue.ToString("G", CultureInfo.CurrentCulture) + ", " + ContactPhone;
+                case "NNP":
+                    return Name + ", " + Revenue.ToString("N", CultureInfo.CurrentCulture) + ", " + ContactPhone;
+                case "NG":
+                    return Name + ", " + Revenue.ToString("G", CultureInfo.CurrentCulture);
+                case "NN":
+                    return Name + ", " + Revenue.ToString("N", CultureInfo.CurrentCulture);
+                case "PG":
+                    return ContactPhone + ", " + Revenue.ToString("G", CultureInfo.CurrentCulture);
+                case "PN":
+                    return ContactPhone + ", " + Revenue.ToString("N", CultureInfo.CurrentCulture);
+                default:
+                    try
                     {
-                        case 'A':
-                            stringBuilder.Append(Name);
-                            break;
-                        case 'B':
-                            stringBuilder.Append(ContactPhone);
-                            break;
-                        default:
-                            if (char.IsPunctuation(format[i]))
-                            {
-                                stringBuilder.Append(format[i]);
-                            }
-                            else
-                            {
-                                stringBuilder.Append(Revenue.ToString(format[i].ToString(),
-                                   Thread.CurrentThread.CurrentCulture));
-                            }
-                            break;
+                        return Revenue.ToString(format, CultureInfo.CurrentCulture);
                     }
-                }
-                catch (FormatException ex)
-                {
-                    throw new FormatException(String.Format("The format of '{0}' is invalid.", format[i]), ex);
-                }
+                    catch (FormatException ex)
+                    {
+                        throw new ArgumentException(($"Invalid {nameof(format)}!"), ex);
+                    }
             }
-
-            return stringBuilder.ToString();
         }
     }
 }

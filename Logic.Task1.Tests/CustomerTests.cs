@@ -1,28 +1,30 @@
-﻿using System.Globalization;
+﻿using NUnit.Framework;
+using System.Globalization;
 using System.Threading;
-using NUnit.Framework;
 
 namespace Logic.Task1.Tests
 {
-    [TestFixture]
-    public class CustomerTests
+    class CustomerTests
     {
-        [TestCase("Jeffrey Richter", 1_000_000, "+1 (425) 555 - 0100", "A, N, B", ExpectedResult = "Jeffrey Richter, 1,000,000.00, +1 (425) 555 - 0100")]
-        [TestCase("Jeffrey Richter", 1_000_000, "+1 (425) 555 - 0100", "A", ExpectedResult = "Jeffrey Richter")]
-        [TestCase("Jeffrey Richter", 1_000_000, "+1 (425) 555 - 0100", "B", ExpectedResult = "+1 (425) 555 - 0100")]
-        [TestCase("Jeffrey Richter", 1_000_000, "+1 (425) 555 - 0100", "B, G", ExpectedResult = "+1 (425) 555 - 0100, 1000000")]
-        [TestCase("Jeffrey Richter", 1_000_000, "+1 (425) 555 - 0100", "A, N", ExpectedResult = "Jeffrey Richter, 1,000,000.00")]
-        [TestCase("Jeffrey Richter", 1_000_000, "+1 (425) 555 - 0100", "G", ExpectedResult = "1000000")]
-        public string ToString_UnformatValues_FormatString(string name, decimal revenue, string number, string format)
+        [TestCase("NNP", ExpectedResult = "Jeffrey Richter, 1,000,000.00, +1 (425) 555 - 0100")]
+        [TestCase("Nm", ExpectedResult = "Jeffrey Richter")]
+        [TestCase("Ph", ExpectedResult = "+1 (425) 555 - 0100")]
+        [TestCase("PG", ExpectedResult = "+1 (425) 555 - 0100, 1000000")]
+        [TestCase("NN", ExpectedResult = "Jeffrey Richter, 1,000,000.00")]
+        [TestCase("NP", ExpectedResult = "Jeffrey Richter, +1 (425) 555 - 0100")]
+        [TestCase("G", ExpectedResult = "1000000")]
+        public string ToString_UnformatValues_FormatString(string format)
         {
             var customer = new Customer
             {
-                Name = name,
-                Revenue = revenue,
-                ContactPhone = number
+                Name = "Jeffrey Richter",
+                Revenue = 1_000_000m,
+                ContactPhone = "+1 (425) 555 - 0100"
             };
 
-            return customer.ToString(format);
+            string actual = customer.ToString(format);
+
+            return actual;
         }
 
         [TestCase("P", "en-US")]
@@ -43,13 +45,13 @@ namespace Logic.Task1.Tests
         public void ToString_CultureDependentValue_FormatString(string format, string culture)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
-            decimal revenue = 10.30M;
+            decimal revenue = 10.30m;
 
-            string expected = revenue.ToString(format, CultureInfo.CurrentCulture);
+            string expected = revenue.ToString(format, Thread.CurrentThread.CurrentCulture);
 
             var customer = new Customer { Revenue = revenue };
 
-            string actual = customer.ToString(format);
+            Assert.AreEqual(expected, customer.ToString(format));
         }
     }
 }

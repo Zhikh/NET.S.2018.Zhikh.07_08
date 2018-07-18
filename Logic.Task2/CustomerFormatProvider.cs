@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Globalization;
-using System.Text;
+using Logic.Task1;
 
-namespace Logic.Task1
+namespace Logic.Task2
 {
     public sealed class CustomerFormatProvider : IFormatProvider, ICustomFormatter
     {
@@ -10,43 +10,33 @@ namespace Logic.Task1
         {
             if (arg == null)
             {
-                throw new ArgumentException("Argument can't be null!");
+                throw new ArgumentNullException($"The {nameof(arg)} can't be null!");
             }
 
             Customer customer = arg as Customer;
             if (customer == null)
             {
-                throw new ArgumentException("Argument isn't of correct type for this format provider!");
+                throw new ArgumentNullException($"The {nameof(customer)} isn't correct!");
             }
-
-            var stringBuilder = new StringBuilder();
-            for (int i = 0; i < format.Length; i++)
+            
+            switch (format)
             {
-                try
-                {
-                    switch (format[i])
+                case "K":
+                    return customer.Name.ToUpper();
+                case "k":
+                    return customer.Name.ToLower();
+                case "Z":
+                    return "(" + customer.ContactPhone + ")";
+                default:
+                    try
                     {
-                        case 'K':
-                            stringBuilder.Append(customer.Name.ToUpper());
-                            break;
-                        case 'k':
-                            stringBuilder.Append(customer.Name.ToLower());
-                            break;
-                        case 'Z':
-                            stringBuilder.Append("(" + customer.ContactPhone + ")");
-                            break;
-                        default:
-                            stringBuilder.Append(customer.ToString(format[i].ToString(), formatProvider));
-                            break;
+                        return customer.ToString(format.ToString(), CultureInfo.CurrentCulture);
                     }
-                }
-                catch (FormatException ex)
-                {
-                    throw new FormatException(String.Format("The format of '{0}' is invalid.", format[i]), ex);
-                }
+                    catch (FormatException ex)
+                    {
+                        throw new ArgumentException(String.Format($"Invalid {nameof(format)}!"), ex);
+                    }
             }
-
-            return stringBuilder.ToString();
         }
 
         public object GetFormat(Type formatType)
